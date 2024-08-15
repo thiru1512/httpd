@@ -1,0 +1,49 @@
+- name: Install Packages
+  package:
+    name: "{{item}}"
+    state: present
+  loop:
+    - wget
+    - git
+- name: Install httpd
+  yum:
+    name: "{{pkg1}}"
+    state: present
+  when: ansible_facts['os_family'] == "RedHat"
+  notify: start services on redhat
+
+- name: Install apache
+  apt:
+    name: "{{pkg2}}"
+    state: present
+    update_cache: yes
+  when: ansible_distribution ==  "Ubuntu"
+  notify: start services on ubuntu
+
+    #- name: Starting services on redhat
+    #service:
+    #name: "{{pkg1}}"
+    #state: started
+    #enabled: yes
+    #when: ansible_facts['os_family'] == "RedHat"
+
+    #- name: Starting services on ubuntu
+    #service:
+    #name: "{{pkg2}}"
+    #state: started
+    #enabled: yes
+    # when: ansible_distribution == "Ubuntu"
+
+
+
+
+- name: copy index file
+  ansible.builtin.copy:
+    src: files/index.html
+    dest: /var/www/html
+    owner: root
+    group: root
+    mode: '0644'
+  notify: 
+    - restart services on ubuntu
+    - restart services on redhat

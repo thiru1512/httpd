@@ -1,0 +1,28 @@
+---
+# handlers file for httpd
+#
+#
+#
+- name: start services on redhat
+  service:
+    name: "{{pkg1}}"
+    state: started
+  when: ansible_facts['os_family'] ==  "RedHat"
+
+- name: start services on ubuntu
+  service:
+    name: "{{pkg2}}"
+    state: started
+  when: ansible_distribution == "Ubuntu"
+
+- name: restart services on redhat
+  service:
+    name: "{{pkg1}}"
+    state: restarted
+  when: ansible_facts['os_family'] ==  "RedHat"
+
+- name: restart services on ubuntu
+  service:
+    name: "{{pkg2}}"
+    state: restarted
+  when: ansible_distribution == "Ubuntu"
